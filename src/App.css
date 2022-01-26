@@ -1,5 +1,89 @@
-body {
+*, *::after, *::before {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
+
+.App {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    background-color: #222;
+}
+
+.editors {
+    width: 100vw;
+    height: 50vh;
+    display: flex;
+    padding: .5rem;
+}
+
+.editor-container {
+    flex-grow: 1;
+    flex-basis: 0;
+    padding: .5rem;
+}
+
+.CodeMirror {
+    flex-grow: 1;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.editor-container.collapsed {
+    flex-grow: 0;
+}
+
+.editor-container.collapsed .CodeMirror-scroll {
+    position: absolute;
+    overflow: hidden !important;
+}
+
+.editor-header {
+    width: 100%;
+    background-color: #111;
+    color: #dadada;
+    font-size: 1.2rem;
+    padding: .5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+}
+
+.editor-header > button {
+    font-size: 1.2rem;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    color: white;
+    margin-left: 1rem;
+}
+
+.editor-body {
+    width: 100%;
+    height: 100%;
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    overflow: hidden;
+}
+.output-screen {
+    display: flex;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.output-screen > iframe {
+    width: 100%;
+    min-height: 45vh;
+    background-color: #333;
+}
+

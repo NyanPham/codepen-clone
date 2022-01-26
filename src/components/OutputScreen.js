@@ -1,35 +1,15 @@
-import React, { useEffect } from 'react';
-import { Helmet } from 'react-helmet-async'
+import React from 'react';
 
-const screenContainerStyle = {
-    gridColumn: 'span 3',
-    gridRow: '2 / 3',
-    marginTop: '1rem',
-    color: "#dadada",
-    display: 'flex',
-    flexDirection: 'column'
-}
-
-const screenStyle = {
-    backgroundColor: 'white',
-    width: '100%',
-    height: '100%',
-    position: 'relative'
-}
-
-const OutputScreen = ({htmlText, cssText, jsText}) => {
+const OutputScreen = ({source}) => {
     return (
-        <div className="output-screen-container" style={screenContainerStyle}>
-            <h2 style={{color: '#dadada'}}>Result</h2>
-            <div 
-                className="output-screen" 
-                dangerouslySetInnerHTML={{__html: htmlText}} 
-                style={screenStyle}
-            /> 
-            <Helmet>
-                 <script>{jsText}</script>
-                <style>{cssText}</style>
-            </Helmet>
+        <div className="output-screen">
+            <iframe
+                title="output"
+                sandbox="allow-scripts"
+                frameBorder="0"
+                srcDoc={source}
+            >
+            </iframe>
         </div>
     )
 };

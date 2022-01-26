@@ -1,61 +1,62 @@
 import './App.css';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-import CSS from './components/CSS';
-import JavaScript from './components/JS';
-import HTML from './components/HTML';
 import OutputScreen from './components/OutputScreen';
-
-const structureStyle = {
-	display: 'grid',
-	gridTemplateColumns: 'repeat(3, 1fr)',
-	gridTemplateRows: '50vh 700px',
-	height: '100vh',
-	width: '100vw',
-	justifyContent: 'center',
-	alignItems: 'stretch',
-	color: 'white',
-	backgroundColor: 'black',
-	gap: '1rem',
-}
-
-const initialCSSText = 
-`.frame {
-	width: 400px; 
-	height: 400px; 
-	position: absolute; 
-	top: 50%; 
-	left: 50%;
-	transform: translate(-50%, -50%); 
-	background: white;
-	box-shadow: 0 0 10px 5px rgba(0,0,0,0.5);
-}`
+import TextEditor from './components/TextEditor';
+import useLocalStorage from './hooks/useLocalStorage'
 
 function App() {
 
-	const [htmlText, setHtmlText] = useState('<div class="frame"></div>')
-	const [styleText, setStyleText] = useState(initialCSSText)
-	const [jsText, setJsText] = useState('')
-	const [currentJsText, setCurrentJsText] = useState('')
+	const [htmlText, setHtmlText] = useLocalStorage('html','<p>Let\'s hack!</p>')
+	const [cssText, setCssText] = useLocalStorage('css','p { \n\tcolor: white;\n\tfont-size: 1.5rem;\n}')
+	const [jsText, setJsText] = useLocalStorage('javascript','document.querySelector("p").style.backgroundColor = "hsl(200, 100%, 50%)"')
+	const [sourceDoc, setSourceDoc] = useState('')
 
-	const applyJsText = () => {
-		setCurrentJsText(jsText)
-	}
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setSourceDoc(`
+			<html>
+				<body>${htmlText}</body>
+				<style>${cssText}</style>
+				<script>${jsText}</script>
+			</html>
+		`)
+		}, 300)
+
+		return () => clearTimeout(timeout)
+	}, [htmlText, cssText, jsText])
 
 	return (
-		<div className="App" style={structureStyle}>
-			<HTML text={htmlText} onHtmlChange={(e) => setHtmlText(e.target.value)}/>
-			<CSS text={styleText} onCssChange={(e) => setStyleText(e.target.value)}/>
-			<JavaScript text={jsText} onJsChange={(e) => setJsText(e.target.value)} applyJsText={applyJsText}/>
-			<OutputScreen htmlText={htmlText} cssText={styleText} jsText={currentJsText}/>
+		<div className="App">
+			<div className="editors">
+				<TextEditor 
+					languageName="HTML"
+					value={htmlText}
+					onChange={(editor, data, value) => {
+						setHtmlText(value)
+					}}
+					language="xml"
+				/>
+				<TextEditor 
+					languageName="CSS"
+					value={cssText}
+					onChange={(editor, data, value) => {
+						setCssText(value)
+					}}
+					language="css"
+				/>
+				<TextEditor 
+					languageName="JS"
+					value={jsText}
+					onChange={(editor, data, value) => {
+						setJsText(value)
+					}}
+					language="javascript"
+				/>
+			</div>
+			<OutputScreen source={sourceDoc}/>
 		</div>
 	)
 }
-
-function applyStyle(styleText) {
-	const styleTag = document.getElementsByTagName('style')[0]
-	styleTag.innerText = styleText	
-} 
-
 
 export default App;
